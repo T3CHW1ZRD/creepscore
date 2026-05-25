@@ -252,9 +252,11 @@ const VAGUE_RE = /\b(may|might|such as|including but not limited to|from time to
 function clamp(n, lo = 0, hi = 100) { return Math.max(lo, Math.min(hi, n)); }
 
 function snippet(text, index, len) {
-  const start = Math.max(0, index - 45);
-  const raw = text.slice(start, index + len + 70).replace(/\s+/g, " ").trim();
-  return (start > 0 ? "…" : "") + raw + "…";
+  // Grab a fuller window of surrounding context (shown when a finding is expanded).
+  const start = Math.max(0, index - 90);
+  const end = Math.min(text.length, index + len + 220);
+  const raw = text.slice(start, end).replace(/\s+/g, " ").trim();
+  return (start > 0 ? "…" : "") + raw + (end < text.length ? "…" : "");
 }
 
 function count(text, re) { return (text.match(re) || []).length; }
