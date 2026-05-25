@@ -1,0 +1,11 @@
+[
+  { "file": "signal.txt",      "label": "Signal",     "type": "privacy", "note": "Privacy-first messenger" },
+  { "file": "duckduckgo.txt",  "label": "DuckDuckGo",  "type": "privacy", "note": "\"We don't track you\"" },
+  { "file": "proton.txt",      "label": "Proton",      "type": "privacy", "note": "Encrypted email" },
+  { "file": "apple.txt",       "label": "Apple",       "type": "privacy", "note": "Big tech, privacy-marketed" },
+  { "file": "google.txt",      "label": "Google",      "type": "privacy", "note": "Ad-driven giant" },
+  { "file": "tiktok.txt",      "label": "TikTok",      "type": "privacy", "note": "Heavy data collection" },
+  { "file": "github_tos.txt",  "label": "GitHub ToS",  "type": "tos",     "note": "Developer-friendly terms" },
+  { "file": "discord_tos.txt", "label": "Discord ToS", "type": "tos",     "note": "Forced arbitration" },
+  { "file": "spotify_tos.txt", "label": "Spotify ToS", "type": "tos",     "note": "Arbitration + auto-renew" }
+]

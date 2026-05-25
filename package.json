@@ -1,0 +1,11 @@
+{
+  "name": "creepscore",
+  "version": "1.0.0",
+  "description": "A transparent report card for privacy policies and terms of service.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "eval": "node test/run.mjs"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CreepScore — grade the fine print</title>
+<meta name="description" content="A transparent report card for privacy policies and terms of service. Runs 100% in your browser." />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root { font-family: 'Inter', system-ui, sans-serif; }
+  body { background: radial-gradient(1200px 600px at 50% -10%, #1e293b 0%, #0b1120 55%); }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .fade { animation: fade .4s ease both; }
+  @keyframes fade { from { opacity:0; transform: translateY(8px);} to {opacity:1; transform:none;} }
+  .bar { transition: width .7s cubic-bezier(.2,.8,.2,1); }
+  .seg.active { background:#4f46e5; color:#fff; }
+</style>
+</head>
+<body class="text-slate-100 min-h-screen">
+<div class="max-w-4xl mx-auto px-5 py-10">
+
+  <!-- Header -->
+  <header class="text-center mb-8">
+    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight">
+      Creep<span class="text-indigo-400">Score</span>
+    </h1>
+    <p class="mt-2 text-slate-400">A report card for the fine print — <b class="text-slate-200">privacy policies</b> &amp; <b class="text-slate-200">terms of service</b>.</p>
+    <p class="mt-3 inline-flex items-center gap-2 text-xs text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1">
+      🔒 100% in your browser — nothing is uploaded, no AI black box. Every score is auditable.
+    </p>
+  </header>
+
+  <!-- Input -->
+  <section class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 shadow-xl backdrop-blur">
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-3">
+      <span class="text-sm text-slate-400">Try a real company:</span>
+      <div id="chips" class="flex flex-wrap gap-2"></div>
+    </div>
+
+    <textarea id="input" rows="7" spellcheck="false"
+      class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-y"
+      placeholder="Paste a privacy policy or terms of service here…"></textarea>
+
+    <div class="flex items-center justify-between flex-wrap gap-3 mt-3">
+      <div class="inline-flex rounded-lg border border-slate-700 overflow-hidden text-sm">
+        <button data-type="auto"    class="seg active px-3 py-1.5">Auto-detect</button>
+        <button data-type="privacy" class="seg px-3 py-1.5 border-l border-slate-700">Privacy</button>
+        <button data-type="tos"     class="seg px-3 py-1.5 border-l border-slate-700">Terms</button>
+      </div>
+      <div class="flex gap-2">
+        <button id="clear" class="px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-800 text-sm">Clear</button>
+        <button id="analyze" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-semibold text-sm shadow-lg shadow-indigo-900/40">Analyze →</button>
+      </div>
+    </div>
+    <p id="error" class="text-rose-400 text-sm mt-3 hidden"></p>
+  </section>
+
+  <!-- Results -->
+  <section id="results" class="mt-6 hidden"></section>
+
+  <footer class="text-center text-xs text-slate-600 mt-12">
+    Transparent rule-based rubric · no data leaves your device ·
+    <a class="underline hover:text-slate-400" href="https://github.com/t3chw1zrd/creepscore">source</a>
+  </footer>
+</div>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>

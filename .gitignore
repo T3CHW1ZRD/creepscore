@@ -1,19 +1,6 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-.eggs/
-build/
-dist/
-.pytest_cache/
-.venv/
-venv/
-
-# Augur run outputs (regenerate with `augur gen-data` / `augur train`)
-artifacts/
-data/
-
-# OS / editor
+node_modules/
 .DS_Store
 .idea/
 .vscode/
+*.log
+.pytest_cache/
