@@ -10,6 +10,7 @@ let lastText = "";
 let lastResult = null;
 let source = { label: "Pasted document", domain: null };
 let MANIFEST = [];
+let currentFindings = {}; // id -> finding, for "view in document"
 
 const GRADE_COLOR = { A: "#16a34a", B: "#65a30d", C: "#d4a017", D: "#ea580c", F: "#ef4444" };
 const barColor = (s) => (s >= 75 ? "#16a34a" : s >= 55 ? "#d4a017" : s >= 40 ? "#ea580c" : "#ef4444");
@@ -19,13 +20,49 @@ const logo = (d) =>
 
 // --- Views (no autoscroll; instant reset to top on switch) -----------------
 function showView(name) {
-  ["pick", "paste", "result"].forEach((v) => $("#" + v + "View").classList.toggle("hidden", v !== name));
+  ["pick", "paste", "result", "doc"].forEach((v) => $("#" + v + "View").classList.toggle("hidden", v !== name));
   window.scrollTo(0, 0);
 }
 $("#home").onclick = () => showView("pick");
 $("#openPaste").onclick = () => showView("paste");
 $("#backFromPaste").onclick = () => showView("pick");
 $("#backFromResult").onclick = () => showView("pick");
+$("#backFromDoc").onclick = () => showView("result");
+
+// Locate a clause in the raw document: exact match first, then whitespace-tolerant.
+function locateInText(raw, phrase) {
+  if (!raw || !phrase) return null;
+  const i = raw.indexOf(phrase);
+  if (i >= 0) return [i, i + phrase.length];
+  const toks = phrase.trim().split(/\s+/).slice(0, 20).map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  if (!toks.length) return null;
+  try {
+    const m = new RegExp(toks.join("\\s+"), "i").exec(raw);
+    if (m) return [m.index, m.index + m[0].length];
+  } catch {}
+  return null;
+}
+
+function showDoc(f) {
+  if (!f) return;
+  const raw = lastText || "";
+  const range = locateInText(raw, f.match || f.evidence);
+  $("#docText").innerHTML = range
+    ? esc(raw.slice(0, range[0])) + '<mark id="docHit">' + esc(raw.slice(range[0], range[1])) + "</mark>" + esc(raw.slice(range[1]))
+    : '<div class="muted text-xs mb-2">Couldn\'t pinpoint the exact line — showing the full document.</div>' + esc(raw);
+  $("#docTitle").textContent = `${source.label} · ${lastResult.documentTypeLabel}`;
+  showView("doc");
+  const hit = document.getElementById("docHit");
+  if (hit) hit.scrollIntoView({ block: "center" });
+}
+
+// One delegated listener (results innerHTML is replaced, but #results persists).
+$("#results").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-doc]");
+  if (!b) return;
+  e.preventDefault();
+  showDoc(currentFindings[b.dataset.doc]);
+});
 
 // --- Theme -----------------------------------------------------------------
 const themeBtn = $("#themeToggle");
@@ -106,7 +143,7 @@ $("#analyze").onclick = () => { if (run()) showView("result"); };
 $("#clear").onclick = () => { $("#input").value = ""; source = { label: "Pasted document", domain: null }; $("#error").classList.add("hidden"); };
 
 // --- Render ----------------------------------------------------------------
-function flag(f) {
+function flag(f, id) {
   const meta = (f.impact != null ? (f.impact > 0 ? "+" : "") + f.impact : "") + (f.similarity ? f.similarity + "%" : "");
   return `
     <details class="flag ${f.kind === "bad" ? "flag-bad" : "flag-good"}">
@@ -118,6 +155,7 @@ function flag(f) {
       <div class="evidence">
         <div class="text-[11px] muted mb-1">${esc(f.dimension)}</div>
         <div class="mono text-[11px] leading-relaxed" style="opacity:.85">“${esc(f.evidence)}”</div>
+        ${id ? `<button data-doc="${id}" class="mt-2 text-[11px] font-medium hover:underline" style="color:var(--accent)">View in full document ↗</button>` : ""}
       </div>
     </details>`;
 }
@@ -126,6 +164,9 @@ function render(r) {
   const color = GRADE_COLOR[r.grade];
   const bad = r.findings.filter((f) => f.kind === "bad");
   const good = r.findings.filter((f) => f.kind === "good");
+  currentFindings = {};
+  let _n = 0;
+  const reg = (f) => { const id = "f" + _n++; currentFindings[id] = f; return flag(f, id); };
 
   const dims = r.dimensions.slice().sort((a, b) => a.score - b.score).map((d) => `
     <div class="mb-3">
@@ -168,8 +209,8 @@ function render(r) {
         <h3 class="display font-semibold">What it actually says</h3>
         <p class="text-xs muted mb-3 mt-0.5">Click a clause to read the exact wording.</p>
         <div class="space-y-2 sm:grid sm:grid-cols-2 sm:gap-2 sm:space-y-0">
-          ${bad.length ? bad.map(flag).join("") : '<p class="text-sm muted">No major red flags found.</p>'}
-          ${good.map(flag).join("")}
+          ${bad.length ? bad.map(reg).join("") : '<p class="text-sm muted">No major red flags found.</p>'}
+          ${good.map(reg).join("")}
         </div>
       </div>
     </div>
@@ -182,7 +223,8 @@ function render(r) {
       </div>
       <div id="deepStatus" class="text-xs muted mt-3 hidden"></div>
       <div id="deepOut" class="mt-3 grid sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
-    </div>`;
+    </div>
+    <p class="text-xs muted text-center mt-5">⚖️ Heuristic estimate, not legal advice — automated and may be inaccurate. Always verify against the source document.</p>`;
 
   $("#deepBtn").onclick = runDeep;
 }
@@ -204,7 +246,9 @@ async function runDeep() {
       else if (p.status === "embedding") setStatus(`Analyzing locally… ${p.done}/${p.total} sentences`);
     });
     status.innerHTML = `Scanned ${sentenceCount} sentences in your browser · ${findings.length} semantic match(es) (may overlap the rules).`;
-    out.innerHTML = findings.length ? findings.map(flag).join("") : '<p class="text-sm muted">No additional clauses detected semantically.</p>';
+    out.innerHTML = findings.length
+      ? findings.map((f, i) => { const id = "s" + i; currentFindings[id] = f; return flag(f, id); }).join("")
+      : '<p class="text-sm muted">No additional clauses detected semantically.</p>';
     btn.textContent = "Re-run"; btn.disabled = false; btn.style.opacity = "1";
   } catch (e) {
     status.textContent = "Deep analysis failed: " + e.message + " — needs internet the first time to fetch the model.";

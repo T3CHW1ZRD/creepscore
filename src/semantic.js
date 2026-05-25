@@ -70,7 +70,7 @@ export function matchPrototypes(sentEmb, sentences, protoEmb, protos, threshold 
     }
     if (topI >= 0) {
       const ev = sentences[topI];
-      const finding = { label: proto.text, kind: proto.kind, dimension: proto.category, similarity: Math.round(topSim * 100), evidence: ev };
+      const finding = { label: proto.text, kind: proto.kind, dimension: proto.category, similarity: Math.round(topSim * 100), evidence: ev, match: ev };
       const existing = best.get(ev);
       if (!existing || finding.similarity > existing.similarity) best.set(ev, finding);
     }

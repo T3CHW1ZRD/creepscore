@@ -286,7 +286,7 @@ function scoreDimension(text, dim) {
     const m = sig.re.exec(text);
     if (m) {
       score += sig.delta;
-      findings.push({ dimension: dim.label, label: sig.label, kind: sig.kind, impact: sig.delta, evidence: snippet(text, m.index, m[0].length) });
+      findings.push({ dimension: dim.label, label: sig.label, kind: sig.kind, impact: sig.delta, evidence: snippet(text, m.index, m[0].length), match: m[0] });
     }
   }
   return { id: dim.id, label: dim.label, weight: dim.weight, score: clamp(Math.round(score)), findings };
