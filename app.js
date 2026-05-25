@@ -1,4 +1,4 @@
-// CreepScore UI — view layer over the pure analyzer + semantic engines.
+// CreepScore UI — view-based flow over the pure analyzer + semantic engines.
 import { analyze } from "./src/analyzer.js";
 import { deepAnalyze } from "./src/semantic.js";
 
@@ -14,8 +14,18 @@ let MANIFEST = [];
 const GRADE_COLOR = { A: "#16a34a", B: "#65a30d", C: "#d4a017", D: "#ea580c", F: "#ef4444" };
 const barColor = (s) => (s >= 75 ? "#16a34a" : s >= 55 ? "#d4a017" : s >= 40 ? "#ea580c" : "#ef4444");
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const logo = (domain) =>
-  `https://unavatar.io/${encodeURIComponent(domain)}" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?sz=128&domain=${encodeURIComponent(domain)}'`;
+const logo = (d) =>
+  `https://unavatar.io/${encodeURIComponent(d)}" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?sz=128&domain=${encodeURIComponent(d)}'`;
+
+// --- Views (no autoscroll; instant reset to top on switch) -----------------
+function showView(name) {
+  ["pick", "paste", "result"].forEach((v) => $("#" + v + "View").classList.toggle("hidden", v !== name));
+  window.scrollTo(0, 0);
+}
+$("#home").onclick = () => showView("pick");
+$("#openPaste").onclick = () => showView("paste");
+$("#backFromPaste").onclick = () => showView("pick");
+$("#backFromResult").onclick = () => showView("pick");
 
 // --- Theme -----------------------------------------------------------------
 const themeBtn = $("#themeToggle");
@@ -30,7 +40,6 @@ themeBtn.onclick = () => applyTheme(document.documentElement.getAttribute("data-
 // --- Company library -------------------------------------------------------
 async function loadLibrary() {
   try { MANIFEST = await (await fetch("samples/manifest.json")).json(); } catch { return; }
-  $("#count").textContent = MANIFEST.length;
   const tile = (s, i) => `
     <button class="company rounded-xl p-2.5 flex items-center gap-2.5 text-left" data-i="${i}" data-label="${esc(s.label.toLowerCase())}">
       <span class="logo grid place-items-center w-9 h-9 rounded-lg shrink-0"><img loading="lazy" alt="" src="${logo(s.domain)}"></span>
@@ -42,13 +51,13 @@ async function loadLibrary() {
   $$(".company").forEach((btn) => {
     btn.onclick = async () => {
       const s = MANIFEST[btn.dataset.i];
+      btn.style.opacity = ".5";
       const text = await (await fetch("samples/" + s.file)).text();
+      btn.style.opacity = "1";
       $("#input").value = text;
-      $$(".company").forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
       setType(s.type);
       source = { label: s.label, domain: s.domain };
-      run();
+      if (run()) showView("result");
     };
   });
 }
@@ -66,36 +75,26 @@ $("#search").addEventListener("input", (e) => {
   $$(".company").forEach((b) => b.classList.toggle("hidden", !b.dataset.label.includes(q)));
 });
 
-// --- Doc-type toggle -------------------------------------------------------
-function setType(t) {
-  docType = t;
-  $$(".seg").forEach((b) => b.classList.toggle("active", b.dataset.type === t));
-}
+// --- Doc-type toggle + paste -----------------------------------------------
+function setType(t) { docType = t; $$(".seg").forEach((b) => b.classList.toggle("active", b.dataset.type === t)); }
 $$(".seg").forEach((b) => (b.onclick = () => setType(b.dataset.type)));
-$("#input").addEventListener("input", () => {
-  source = { label: "Pasted document", domain: null };
-  $$(".company").forEach((b) => b.classList.remove("active"));
-});
+$("#input").addEventListener("input", () => { source = { label: "Pasted document", domain: null }; });
 
-// --- Run -------------------------------------------------------------------
 function run() {
   $("#error").classList.add("hidden");
   try {
     lastText = $("#input").value;
     lastResult = analyze(lastText, docType);
     render(lastResult);
+    return true;
   } catch (e) {
-    $("#results").classList.add("hidden");
     $("#error").textContent = e.message;
     $("#error").classList.remove("hidden");
+    return false;
   }
 }
-$("#analyze").onclick = run;
-$("#clear").onclick = () => {
-  $("#input").value = ""; source = { label: "Pasted document", domain: null };
-  $$(".company").forEach((b) => b.classList.remove("active"));
-  $("#results").classList.add("hidden"); $("#error").classList.add("hidden");
-};
+$("#analyze").onclick = () => { if (run()) showView("result"); };
+$("#clear").onclick = () => { $("#input").value = ""; source = { label: "Pasted document", domain: null }; $("#error").classList.add("hidden"); };
 
 // --- Render ----------------------------------------------------------------
 function flag(f) {
@@ -109,7 +108,7 @@ function flag(f) {
       </summary>
       <div class="evidence">
         <div class="text-[11px] muted mb-1">${esc(f.dimension)}</div>
-        <div class="mono text-[11px] leading-relaxed" style="opacity:.8">“${esc(f.evidence)}”</div>
+        <div class="mono text-[11px] leading-relaxed" style="opacity:.85">“${esc(f.evidence)}”</div>
       </div>
     </details>`;
 }
@@ -128,41 +127,37 @@ function render(r) {
     </div>`).join("");
 
   const lowConf = r.lowConfidence ? `
-    <div class="fade rounded-xl p-3 mb-5 text-sm" style="background:var(--bad-bg);border:1px solid var(--bad-bd);color:var(--bad-tx)">
-      <b>Low confidence.</b> Only ${r.findings.length} recognizable clause(s) in ${r.stats.words.toLocaleString()} words — likely an incomplete paste. Treat this grade as provisional.
+    <div class="rounded-xl p-3 mb-4 text-sm" style="background:var(--bad-bg);border:1px solid var(--bad-bd);color:var(--bad-tx)">
+      <b>Low confidence.</b> Only ${r.findings.length} recognizable clause(s) in ${r.stats.words.toLocaleString()} words — likely an incomplete paste. Provisional grade.
     </div>` : "";
 
   const srcLogo = source.domain
-    ? `<span class="logo grid place-items-center w-11 h-11 rounded-lg border bdr shrink-0"><img alt="" src="${logo(source.domain)}" style="width:26px;height:26px"></span>`
-    : `<span class="grid place-items-center w-11 h-11 rounded-lg shrink-0 muted" style="background:var(--bg2)">¶</span>`;
+    ? `<span class="logo grid place-items-center w-14 h-14 rounded-xl border bdr shrink-0"><img alt="" src="${logo(source.domain)}" style="width:32px;height:32px"></span>`
+    : `<span class="grid place-items-center w-14 h-14 rounded-xl shrink-0 muted text-2xl" style="background:var(--bg2)">¶</span>`;
 
   $("#results").innerHTML = `
     ${lowConf}
-    <div class="fade card p-6 flex items-center gap-6 flex-wrap">
-      <div class="grid place-items-center w-24 h-24 rounded-2xl shrink-0" style="background:${color}1f;border:1px solid ${color}55">
-        <div class="display text-5xl font-bold leading-none" style="color:${color}">${r.grade}</div>
-        <div class="mono text-xs mt-1" style="color:${color}">${r.score}/100</div>
-      </div>
-      <div class="min-w-0 flex-1">
-        <div class="flex items-center gap-3">
-          ${srcLogo}
-          <div><div class="display text-xl font-semibold leading-tight">${esc(source.label)}</div>
-            <div class="text-xs muted">${esc(r.documentTypeLabel)} · <span style="color:${color}">${r.risk} risk</span></div></div>
+    <div class="fade card p-6 sm:p-7">
+      <div class="flex items-center gap-5">
+        ${srcLogo}
+        <div class="flex-1 min-w-0">
+          <div class="display text-2xl font-semibold leading-tight truncate">${esc(source.label)}</div>
+          <div class="text-sm muted mt-0.5">${esc(r.documentTypeLabel)}</div>
         </div>
-        <p class="muted mt-3 text-sm">${esc(r.blurb)} — ${r.stats.redFlags} red flag(s), ${r.stats.greenFlags} good sign(s).</p>
-        <div class="flex gap-2 mt-3 text-xs muted flex-wrap">
-          <span class="rounded-full px-2.5 py-1 border bdr">📖 ${r.stats.readingMinutes} min read</span>
-          <span class="rounded-full px-2.5 py-1 border bdr">${r.stats.words.toLocaleString()} words</span>
-          <span class="rounded-full px-2.5 py-1 border bdr">${r.stats.vagueTerms} vague terms</span>
+        <div class="text-right shrink-0">
+          <div class="display text-6xl font-bold leading-none" style="color:${color}">${r.grade}</div>
+          <div class="mono text-xs muted mt-1">${r.score}/100 · <span style="color:${color}">${r.risk}</span></div>
         </div>
       </div>
+      <p class="mt-4 text-[15px]" style="color:var(--text)">${esc(r.blurb)}.
+        <span class="muted">${r.stats.redFlags} red flag(s), ${r.stats.greenFlags} good sign(s) · ${r.stats.readingMinutes} min read · ${r.stats.words.toLocaleString()} words.</span></p>
     </div>
 
-    <div class="fade grid md:grid-cols-2 gap-5 mt-5">
-      <div class="card p-5"><h3 class="display font-semibold mb-4">Category breakdown</h3>${dims}</div>
-      <div class="card p-5">
-        <h3 class="display font-semibold mb-1">What it actually says</h3>
-        <p class="text-xs muted mb-3">Click any item to read the exact clause.</p>
+    <div class="fade grid md:grid-cols-2 gap-4 mt-4">
+      <div class="card p-5 sm:p-6"><h3 class="display font-semibold mb-4">Category breakdown</h3>${dims}</div>
+      <div class="card p-5 sm:p-6">
+        <h3 class="display font-semibold">What it actually says</h3>
+        <p class="text-xs muted mb-3 mt-0.5">Click a clause to read the exact wording.</p>
         <div class="space-y-2">
           ${bad.length ? bad.map(flag).join("") : '<p class="text-sm muted">No major red flags found.</p>'}
           ${good.map(flag).join("")}
@@ -170,7 +165,7 @@ function render(r) {
       </div>
     </div>
 
-    <div id="deep" class="fade card p-5 mt-5">
+    <div class="fade card p-5 sm:p-6 mt-4">
       <div class="flex items-center justify-between gap-3 flex-wrap">
         <div><h3 class="display font-semibold">Deep semantic analysis <span class="text-xs font-normal muted">· optional, in-browser AI</span></h3>
           <p class="text-xs muted mt-0.5">Catches paraphrased clauses the rules miss. Runs locally — your text never leaves the page.</p></div>
@@ -180,9 +175,7 @@ function render(r) {
       <div id="deepOut" class="mt-3 grid sm:grid-cols-2 gap-2"></div>
     </div>`;
 
-  $("#results").classList.remove("hidden");
   $("#deepBtn").onclick = runDeep;
-  $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 // --- Deep analysis ---------------------------------------------------------

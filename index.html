@@ -11,14 +11,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
   :root, [data-theme="dark"] {
-    --bg:#0b0c0f; --card:#15171c; --bg2:#1c1f26; --field:#0f1115; --border:#262a33;
-    --text:#e7e9ee; --muted:#8b919e; --accent:#818cf8;
+    --bg:#0a0b0e; --card:#14161b; --bg2:#1b1e25; --field:#0f1116; --border:#23272f;
+    --text:#e9ebf0; --muted:#8a909c; --accent:#818cf8;
     --bad-bg:rgba(244,63,94,.10); --bad-bd:rgba(244,63,94,.28); --bad-tx:#fda4af;
     --good-bg:rgba(16,185,129,.10); --good-bd:rgba(16,185,129,.28); --good-tx:#6ee7b7;
   }
   [data-theme="light"] {
-    --bg:#f7f7f8; --card:#ffffff; --bg2:#f1f2f4; --field:#fbfbfc; --border:#ececf0;
-    --text:#0f172a; --muted:#64748b; --accent:#4f46e5;
+    --bg:#f6f7f9; --card:#ffffff; --bg2:#eef0f3; --field:#fbfbfc; --border:#e7e9ee;
+    --text:#0f172a; --muted:#5b6472; --accent:#4f46e5;
     --bad-bg:#fff1f2; --bad-bd:#fecdd3; --bad-tx:#9f1239;
     --good-bg:#f0fdf4; --good-bd:#bbf7d0; --good-tx:#166534;
   }
@@ -26,109 +26,93 @@
   body { font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); }
   .display { font-family: "Space Grotesk", Inter, sans-serif; letter-spacing: -0.02em; }
   .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; }
   .field { background: var(--field); border: 1px solid var(--border); color: var(--text); }
   .muted { color: var(--muted); }
   .bdr { border-color: var(--border); }
-  .fade { animation: fade .35s ease both; }
-  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .fade { animation: fade .3s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   .bar { transition: width .7s cubic-bezier(.2,.8,.2,1); }
   .seg { color: var(--muted); } .seg.active { background: var(--text); color: var(--bg); }
-  .tab { color: var(--muted); border-color: transparent; } .tab.active { color: var(--text); border-color: var(--text); }
-  .company { background: var(--card); border: 1px solid var(--border); transition: transform .12s, border-color .12s, box-shadow .12s; }
+  .tab { color: var(--muted); border-color: transparent; } .tab.active { color: var(--text); border-color: var(--accent); }
+  .company { background: var(--card); border: 1px solid var(--border); transition: transform .12s, border-color .12s; }
   .company:hover { transform: translateY(-2px); border-color: var(--accent); }
-  .company.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
   .logo { background:#fff; } .logo img { width: 22px; height: 22px; object-fit: contain; }
   .flag { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-  .flag > summary { list-style: none; cursor: pointer; padding: 10px 12px; display: flex; align-items: center; gap: 8px; }
+  .flag > summary { list-style: none; cursor: pointer; padding: 11px 13px; display: flex; align-items: center; gap: 10px; }
   .flag > summary::-webkit-details-marker { display: none; }
   .flag[open] > summary { border-bottom: 1px solid var(--border); }
   .flag .chev { transition: transform .15s; color: var(--muted); }
   .flag[open] .chev { transform: rotate(90deg); }
-  .flag .evidence { padding: 10px 12px; }
+  .flag .evidence { padding: 11px 13px; }
   .flag-bad { background: var(--bad-bg); } .flag-bad .ttl { color: var(--bad-tx); }
   .flag-good { background: var(--good-bg); } .flag-good .ttl { color: var(--good-tx); }
-  .scrollbox { max-height: 22rem; overflow-y: auto; }
+  .ghost { border: 1px solid var(--border); color: var(--muted); } .ghost:hover { color: var(--text); border-color: var(--accent); }
   ::-webkit-scrollbar { height: 9px; width: 9px; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 9px; }
 </style>
 </head>
 <body>
-  <header class="sticky top-0 z-20 border-b bdr" style="background:color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(8px);">
-    <div class="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
-      <a href="#top" class="flex items-center gap-2">
+  <header class="sticky top-0 z-20 border-b bdr" style="background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px);">
+    <div class="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
+      <button id="home" class="flex items-center gap-2">
         <span class="grid place-items-center w-7 h-7 rounded-lg display font-bold text-sm" style="background:var(--text);color:var(--bg)">C</span>
         <span class="display font-semibold text-lg">CreepScore</span>
-      </a>
-      <nav class="flex items-center gap-4 text-sm muted">
-        <a href="#library" class="hover:opacity-70 hidden sm:inline">Companies</a>
-        <a href="#how" class="hover:opacity-70 hidden sm:inline">How it works</a>
-        <a href="https://github.com/t3chw1zrd/creepscore" class="hover:opacity-70">GitHub</a>
-        <button id="themeToggle" title="Toggle theme" class="w-8 h-8 grid place-items-center rounded-lg border bdr hover:opacity-80">🌙</button>
-      </nav>
+      </button>
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/t3chw1zrd/creepscore" class="text-sm muted hover:opacity-70">GitHub</a>
+        <button id="themeToggle" title="Toggle theme" class="w-8 h-8 grid place-items-center rounded-lg ghost">🌙</button>
+      </div>
     </div>
   </header>
 
-  <main id="top" class="max-w-5xl mx-auto px-5">
-    <section class="pt-12 pb-7 text-center">
-      <span class="inline-flex items-center gap-2 text-xs font-medium muted card px-3 py-1 rounded-full">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> 100% in your browser · nothing uploaded · no AI black box
-      </span>
-      <h1 class="display text-4xl sm:text-5xl font-bold mt-5 leading-[1.05]">Read the fine print<br class="hidden sm:block" /> so you don't have to.</h1>
-      <p class="muted mt-4 max-w-xl mx-auto">Pick a company or paste any <b style="color:var(--text)">privacy policy</b> or <b style="color:var(--text)">terms of service</b> for an instant, auditable <b style="color:var(--text)">A–F grade</b> — with the exact clauses behind it.</p>
+  <main class="max-w-4xl mx-auto px-5 pb-20">
+
+    <!-- ░░ PICK VIEW ░░ -->
+    <section id="pickView" class="pt-12">
+      <div class="text-center mb-7">
+        <h1 class="display text-4xl sm:text-5xl font-bold leading-[1.05]">Is it creepy?</h1>
+        <p class="muted mt-3">Grade any company's <b style="color:var(--text)">privacy policy</b> or <b style="color:var(--text)">terms of service</b> — instantly, in your browser.</p>
+      </div>
+
+      <input id="search" placeholder="Search 64 companies…" class="field w-full rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500/30 mb-4" />
+
+      <div class="flex items-center justify-between gap-3 flex-wrap mb-4">
+        <div class="flex gap-1 text-sm font-medium">
+          <button data-tab="privacy" class="tab active px-1 pb-2 mr-5 border-b-2">Privacy policies</button>
+          <button data-tab="tos" class="tab px-1 pb-2 border-b-2">Terms of service</button>
+        </div>
+        <button id="openPaste" class="text-sm ghost rounded-lg px-3 py-1.5">Paste your own ↗</button>
+      </div>
+
+      <div id="gridPrivacy" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5"></div>
+      <div id="gridTos" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 hidden"></div>
     </section>
 
-    <!-- Company library FIRST so it's always near the top -->
-    <section id="library" class="card p-5">
-      <div class="flex items-end justify-between gap-3 flex-wrap mb-3">
-        <div>
-          <h2 class="display text-lg font-semibold">Pick a company</h2>
-          <p class="muted text-xs mt-0.5"><span id="count">64</span> real, live policies — click to grade instantly.</p>
-        </div>
-        <input id="search" placeholder="Search…" class="field rounded-lg px-3 py-1.5 text-sm w-40 focus:outline-none focus:ring-2 focus:ring-indigo-500/30" />
+    <!-- ░░ PASTE VIEW ░░ -->
+    <section id="pasteView" class="pt-8 hidden">
+      <button id="backFromPaste" class="text-sm ghost rounded-lg px-3 py-1.5 mb-5">← Companies</button>
+      <h2 class="display text-2xl font-bold mb-1">Paste a document</h2>
+      <p class="muted text-sm mb-4">Drop in any privacy policy or terms of service. It's analyzed locally — nothing is uploaded.</p>
+      <div class="inline-flex rounded-lg border bdr overflow-hidden text-sm font-medium mb-3">
+        <button data-type="auto" class="seg active px-3.5 py-1.5">Auto-detect</button>
+        <button data-type="privacy" class="seg px-3.5 py-1.5 border-l bdr">Privacy</button>
+        <button data-type="tos" class="seg px-3.5 py-1.5 border-l bdr">Terms</button>
       </div>
-      <div class="flex gap-1 border-b bdr mb-4 text-sm font-medium">
-        <button data-tab="privacy" class="tab active px-1 pb-2 mr-5 border-b-2">Privacy policies</button>
-        <button data-tab="tos" class="tab px-1 pb-2 border-b-2">Terms of service</button>
+      <textarea id="input" rows="9" spellcheck="false"
+        class="field w-full rounded-xl p-4 text-sm placeholder:opacity-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 resize-y"
+        placeholder="Paste the policy text here…"></textarea>
+      <div class="flex items-center justify-end gap-2 mt-3">
+        <button id="clear" class="px-4 py-2 rounded-lg muted hover:opacity-70 text-sm font-medium">Clear</button>
+        <button id="analyze" class="px-5 py-2 rounded-lg text-white font-semibold text-sm" style="background:var(--accent)">Analyze</button>
       </div>
-      <div class="scrollbox pr-1">
-        <div id="gridPrivacy" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2"></div>
-        <div id="gridTos" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 hidden"></div>
-      </div>
+      <p id="error" class="text-rose-400 text-sm mt-3 hidden"></p>
     </section>
 
-    <!-- Paste-your-own -->
-    <details class="card mt-4">
-      <summary class="px-5 py-3 cursor-pointer muted text-sm select-none">…or paste your own document</summary>
-      <div class="px-5 pb-5">
-        <div class="inline-flex rounded-lg border bdr overflow-hidden text-sm font-medium mb-3">
-          <button data-type="auto" class="seg active px-3.5 py-1.5">Auto-detect</button>
-          <button data-type="privacy" class="seg px-3.5 py-1.5 border-l bdr">Privacy</button>
-          <button data-type="tos" class="seg px-3.5 py-1.5 border-l bdr">Terms</button>
-        </div>
-        <textarea id="input" rows="6" spellcheck="false"
-          class="field w-full rounded-xl p-4 text-sm placeholder:opacity-50 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 resize-y"
-          placeholder="Paste a privacy policy or terms of service here…"></textarea>
-        <div class="flex items-center justify-end gap-2 mt-3">
-          <button id="clear" class="px-4 py-2 rounded-lg muted hover:opacity-70 text-sm font-medium">Clear</button>
-          <button id="analyze" class="px-5 py-2 rounded-lg text-white font-semibold text-sm" style="background:var(--accent)">Analyze</button>
-        </div>
-      </div>
-    </details>
-    <p id="error" class="text-rose-400 text-sm mt-3 hidden"></p>
-
-    <!-- Results -->
-    <section id="results" class="mt-6 hidden"></section>
-
-    <section id="how" class="mt-16 grid sm:grid-cols-3 gap-4">
-      <div class="card p-5"><div class="text-xs font-semibold mb-1" style="color:var(--accent)">01 · TRANSPARENT</div><p class="text-sm muted">A weighted rubric, not an LLM. Every point traces to a clause you can read.</p></div>
-      <div class="card p-5"><div class="text-xs font-semibold mb-1" style="color:var(--accent)">02 · PRIVATE</div><p class="text-sm muted">Runs entirely in your browser. Your document is never uploaded.</p></div>
-      <div class="card p-5"><div class="text-xs font-semibold mb-1" style="color:var(--accent)">03 · DEEP</div><p class="text-sm muted">Optional in-browser AI catches paraphrased clauses the rules miss.</p></div>
+    <!-- ░░ RESULT VIEW ░░ -->
+    <section id="resultView" class="pt-8 hidden">
+      <button id="backFromResult" class="text-sm ghost rounded-lg px-3 py-1.5 mb-5">← Companies</button>
+      <div id="results"></div>
     </section>
-
-    <footer class="text-center text-xs muted py-12 mt-6">
-      Transparent rule-based engine · your data never leaves your device ·
-      <a class="underline hover:opacity-70" href="https://github.com/t3chw1zrd/creepscore">open source</a>
-    </footer>
   </main>
 
   <script type="module" src="./app.js"></script>
