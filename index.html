@@ -86,6 +86,15 @@
 
       <div id="gridPrivacy" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5"></div>
       <div id="gridTos" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 hidden"></div>
+
+      <div class="mt-8 pt-6 border-t bdr text-center">
+        <p class="text-sm muted mb-2">Don't see a company you want graded?</p>
+        <form id="suggestForm" class="flex gap-2 justify-center max-w-sm mx-auto">
+          <input id="suggestInput" placeholder="Suggest a company…" class="field flex-1 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30" />
+          <button type="submit" class="px-4 py-2 rounded-lg text-white text-sm font-semibold" style="background:var(--accent)">Suggest</button>
+        </form>
+        <p id="suggestMsg" class="text-xs mt-2 h-4 muted"></p>
+      </div>
     </section>
 
     <!-- ░░ PASTE VIEW ░░ -->

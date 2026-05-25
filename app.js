@@ -75,6 +75,15 @@ $("#search").addEventListener("input", (e) => {
   $$(".company").forEach((b) => b.classList.toggle("hidden", !b.dataset.label.includes(q)));
 });
 
+// --- Suggest a company (no-op acknowledgment) ------------------------------
+$("#suggestForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const v = $("#suggestInput").value.trim();
+  if (!v) return;
+  $("#suggestMsg").textContent = `Thanks — noted "${v}".`;
+  $("#suggestInput").value = "";
+});
+
 // --- Doc-type toggle + paste -----------------------------------------------
 function setType(t) { docType = t; $$(".seg").forEach((b) => b.classList.toggle("active", b.dataset.type === t)); }
 $$(".seg").forEach((b) => (b.onclick = () => setType(b.dataset.type)));
