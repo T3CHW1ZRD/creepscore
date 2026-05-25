@@ -121,50 +121,60 @@ export const TOS_RUBRIC = [
   {
     id: "disputes",
     label: "Your right to sue",
-    weight: 0.25,
+    weight: 0.22,
     base: 82,
     signals: [
       { label: "Forces binding arbitration (you can't sue in court)", kind: "bad", delta: -30, re: /\b(binding )?arbitration\b/i },
-      { label: "Waives your right to a class action", kind: "bad", delta: -17,
-        re: /\b(class[- ]action waiver|waiv[^.]{0,30}class action|no class actions?|class action waiver)\b/i },
+      { label: "Waives your right to a class action", kind: "bad", delta: -16,
+        re: /\b(class[- ]action waiver|waiv[^.]{0,30}class action|no class actions?|class action waiver|on an individual basis)\b/i },
       { label: "Waives your right to a jury trial", kind: "bad", delta: -10, re: /\bwaiv[^.]{0,30}(jury|trial)\b/i },
+      { label: "Shortens the time you have to bring a claim", kind: "bad", delta: -11,
+        re: /\b((within|after) (one|1|two|2|ninety|90|180) (year|days)[^.]{0,40}(claim|action|file|bring)|claim[^.]{0,40}(within|barred))\b/i },
       { label: "Lets you opt out of arbitration", kind: "good", delta: +18, re: /\bopt[- ]?out of (the )?arbitration\b/i },
     ],
   },
   {
     id: "ip",
     label: "Rights to your content",
-    weight: 0.17,
-    base: 78,
+    weight: 0.15,
+    base: 80,
     signals: [
-      { label: "Takes a broad license to your content", kind: "bad", delta: -23,
-        re: /\b(perpetual|irrevocable|worldwide|royalty[- ]free|sub[- ]?licensable|transferable)\b[^.]{0,80}\blicens/i },
+      { label: "Takes a broad license to your content", kind: "bad", delta: -22,
+        re: /\b(perpetual|irrevocable|worldwide|royalty[- ]free|sub[- ]?licensable|transferable)\b[^.]{0,90}\blicens/i },
       { label: "Licenses the content you post", kind: "bad", delta: -10,
-        re: /\blicen[sc]e[^.]{0,70}(your content|user content|content you (post|submit|upload))\b/i },
-      { label: "Confirms you keep ownership of your content", kind: "good", delta: +22,
-        re: /\byou (retain|keep|own)[^.]{0,40}(ownership|rights|your content|intellectual property)\b/i },
+        re: /\blicen[sc]e[^.]{0,70}(your content|user content|content you (post|submit|upload)|materials you)\b/i },
+      { label: "May use your content for any purpose", kind: "bad", delta: -10,
+        re: /\b(use|reproduce|modify|distribute|display)[^.]{0,60}(your content|user content)[^.]{0,40}(any purpose|commercial)\b/i },
+      { label: "Confirms you keep ownership of your content", kind: "good", delta: +20,
+        re: /\b(you (retain|keep|own)[^.]{0,40}(ownership|rights|your content|intellectual property)|we (claim|take) no ownership)\b/i },
     ],
   },
   {
     id: "changes",
     label: "Can they change the deal on you?",
-    weight: 0.15,
-    base: 62,
+    weight: 0.13,
+    base: 60,
     signals: [
-      { label: "Can change the terms unilaterally", kind: "bad", delta: -20,
+      { label: "Can change the terms unilaterally", kind: "bad", delta: -18,
         re: /\b(we (may|reserve the right to)|right to)\s+(modify|change|update|amend|revise)[^.]{0,50}(these terms|the terms|this agreement|at any time)/i },
-      { label: "Promises to notify you of changes", kind: "good", delta: +13,
+      { label: "Continued use means you accept new terms", kind: "bad", delta: -10,
+        re: /\b(continued? (use|access)|by continuing)[^.]{0,60}(accept|agree|bound)\b/i },
+      { label: "Can change or discontinue the service anytime", kind: "bad", delta: -7,
+        re: /\b(modify|discontinue|suspend|change)[^.]{0,40}(the (service|product|app)|any (feature|part))[^.]{0,30}(at any time|without notice)\b/i },
+      { label: "Promises to notify you of changes", kind: "good", delta: +12,
         re: /\b(notify|notice|inform you)[^.]{0,45}(changes|modifications|update)/i },
     ],
   },
   {
     id: "termination",
     label: "Account termination",
-    weight: 0.12,
+    weight: 0.10,
     base: 66,
     signals: [
-      { label: "Can terminate your account at will", kind: "bad", delta: -19,
+      { label: "Can terminate your account at will", kind: "bad", delta: -18,
         re: /\bterminat[^.]{0,70}(at any time|for any reason|without notice|sole discretion)\b/i },
+      { label: "No liability to you for termination", kind: "bad", delta: -7,
+        re: /\b(terminat|suspend)[^.]{0,50}(without (any )?liability|no liability)\b/i },
       { label: "Gives notice / appeal before termination", kind: "good", delta: +9,
         re: /\b(notice (of|before|prior to) (termination|suspension)|appeal[^.]{0,30}(termination|suspension|decision))\b/i },
     ],
@@ -173,11 +183,14 @@ export const TOS_RUBRIC = [
     id: "liability",
     label: "Liability & warranties",
     weight: 0.12,
-    base: 72,
+    base: 74,
     signals: [
       { label: 'Provided "as is" with no warranty', kind: "bad", delta: -8, re: /\b("as is"|as is\b|without warrant|no warrant|disclaim[^.]{0,30}warrant)/i },
       { label: "Caps or disclaims their liability", kind: "bad", delta: -8, re: /\b(limitation of liability|limit[^.]{0,20}liability|shall not be liable|not (be )?liable)\b/i },
       { label: "Makes you indemnify (defend) them", kind: "bad", delta: -9, re: /\bindemnif(y|ication|ies)\b/i },
+      { label: "You use the service at your own risk", kind: "bad", delta: -6, re: /\bat your (own|sole) risk\b/i },
+      { label: "Caps damages to a tiny amount", kind: "bad", delta: -6,
+        re: /\b(maximum (aggregate )?liability|total liability)[^.]{0,60}(amount you paid|\$\d|limited to)\b/i },
     ],
   },
   {
@@ -188,14 +201,43 @@ export const TOS_RUBRIC = [
     signals: [
       { label: "Auto-renews your subscription", kind: "bad", delta: -14, re: /\b(auto(matically)?[- ]?renew|automatic renewal|renews? automatically)\b/i },
       { label: "Non-refundable charges", kind: "bad", delta: -10, re: /\b(non[- ]?refundable|no refunds?)\b/i },
+      { label: "Can change prices / fees", kind: "bad", delta: -7, re: /\b((change|modify|adjust)[^.]{0,20}(price|fee|rate)|prices? (may|are subject to) change)\b/i },
+      { label: "Authorizes recurring charges to your payment method", kind: "bad", delta: -6,
+        re: /\b(authoriz[^.]{0,40}(recurring|automatic)[^.]{0,20}charge|automatically charge)\b/i },
       { label: "Lets you cancel anytime", kind: "good", delta: +10, re: /\bcancel (at any time|any ?time|whenever)\b/i },
+    ],
+  },
+  {
+    id: "data",
+    label: "Data sharing & communications",
+    weight: 0.09,
+    base: 78,
+    signals: [
+      { label: "May hand your data to law enforcement / on legal request", kind: "bad", delta: -7,
+        re: /\b(law enforcement|legal (request|process)|government (request|authorities)|subpoena|court order)\b/i },
+      { label: "Signs you up for marketing / promotional messages", kind: "bad", delta: -8,
+        re: /\b(agree to receive|consent to receive|send you)[^.]{0,40}(marketing|promotional|advertising)[^.]{0,20}(email|message|communication)/i },
+      { label: "Broadly may share your information", kind: "bad", delta: -6,
+        re: /\bwe may (share|disclose|provide)[^.]{0,40}(your (information|data)|personal)\b/i },
+    ],
+  },
+  {
+    id: "obligations",
+    label: "What they put on you",
+    weight: 0.05,
+    base: 82,
+    signals: [
+      { label: "You're responsible for everything on your account", kind: "bad", delta: -6,
+        re: /\b(responsible|liable) for (all|any)[^.]{0,40}(activity|use|content)[^.]{0,30}(your account|under your)\b/i },
+      { label: "Bans reverse-engineering / scraping", kind: "bad", delta: -4, re: /\b(reverse[- ]engineer|decompile|scrape|crawl)\b/i },
+      { label: "You waive rights you can't get back", kind: "bad", delta: -5, re: /\bwaiv[^.]{0,30}(rights?|claims?)\b/i },
     ],
   },
   {
     id: "jurisdiction",
     label: "Where disputes are decided",
-    weight: 0.09,
-    base: 80,
+    weight: 0.04,
+    base: 82,
     signals: [
       { label: "Forces a specific court / governing law", kind: "bad", delta: -9,
         re: /\b(exclusive jurisdiction|courts located in|governed by the laws of|exclusive venue|submit to the jurisdiction)\b/i },
@@ -285,5 +327,12 @@ export function analyze(text, type = "auto") {
     greenFlags: findings.filter((f) => f.kind === "good").length,
   };
 
-  return { documentType, documentTypeLabel: TYPE_LABELS[documentType], score, ...g, dimensions, findings, stats };
+  // Confidence gate: a baseline-driven rubric will happily "grade" text where it
+  // recognised almost nothing — and a doc with no detected clauses would float to
+  // a misleadingly-OK score. So we flag low confidence and let the UI withhold the
+  // letter grade until there's enough evidence to stand behind it.
+  const MIN_FINDINGS = documentType === "tos" ? 5 : 6;
+  const lowConfidence = words < 350 || findings.length < MIN_FINDINGS;
+
+  return { documentType, documentTypeLabel: TYPE_LABELS[documentType], score, ...g, dimensions, findings, stats, lowConfidence };
 }

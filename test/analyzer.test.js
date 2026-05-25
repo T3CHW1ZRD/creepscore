@@ -74,3 +74,10 @@ test("gradeFor boundaries", () => {
 test("rejects too-short input", () => {
   assert.throws(() => analyze("too short", "privacy"));
 });
+
+test("flags low confidence when little is recognized, not when it's a real doc", () => {
+  const sparse = "Welcome to our wonderful service. We hope you enjoy using it. ".repeat(8);
+  assert.equal(analyze(sparse, "privacy").lowConfidence, true);
+  assert.equal(analyze(load("google.txt"), "privacy").lowConfidence, false);
+  assert.equal(analyze(load("discord_tos.txt"), "tos").lowConfidence, false);
+});

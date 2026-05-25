@@ -34,9 +34,12 @@
 
   <!-- Input -->
   <section class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 shadow-xl backdrop-blur">
-    <div class="flex items-center justify-between flex-wrap gap-3 mb-3">
-      <span class="text-sm text-slate-400">Try a real company:</span>
-      <div id="chips" class="flex flex-wrap gap-2"></div>
+    <div class="mb-3">
+      <div class="text-sm text-slate-400 mb-2">Try a real company (live policies, analyzed in your browser):</div>
+      <div class="space-y-1.5">
+        <div class="flex items-start gap-2"><span class="text-[10px] uppercase tracking-wider text-indigo-400/80 mt-1.5 w-12 shrink-0">Privacy</span><div id="chipsPrivacy" class="flex flex-wrap gap-1.5"></div></div>
+        <div class="flex items-start gap-2"><span class="text-[10px] uppercase tracking-wider text-fuchsia-400/80 mt-1.5 w-12 shrink-0">Terms</span><div id="chipsTos" class="flex flex-wrap gap-1.5"></div></div>
+      </div>
     </div>
 
     <textarea id="input" rows="7" spellcheck="false"
