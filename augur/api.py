@@ -10,9 +10,11 @@ from functools import lru_cache
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from augur.artifacts import DEFAULT_DIR, MODEL_FILE, load_checkpoint
+from augur.data import generate_series
 from augur.infer import forecast as run_forecast
 
 app = FastAPI(
@@ -20,6 +22,8 @@ app = FastAPI(
     version="0.1.0",
     description="Uncertainty-aware financial time-series forecasting (PyTorch).",
 )
+
+STATIC_DIR = Path(__file__).parent / "static"
 
 
 class ForecastRequest(BaseModel):
@@ -44,6 +48,24 @@ def _load():
     if not path.exists():
         raise FileNotFoundError(f"No model at {path}. Train one first: `augur train`.")
     return load_checkpoint(path)
+
+
+@app.get("/", include_in_schema=False)
+def index():
+    """Serve the minimal demo web UI."""
+    return FileResponse(STATIC_DIR / "index.html")
+
+
+@app.get("/sample")
+def sample() -> dict:
+    """Return a ready-to-forecast sample history (so the web demo works in one click)."""
+    try:
+        _, cfg, _ = _load()
+        n = cfg.lookback + 40
+    except FileNotFoundError:
+        n = 70
+    series = generate_series(rows=400, seed=7)["value"].to_numpy()
+    return {"history": [round(float(v), 4) for v in series[-n:]]}
 
 
 @app.get("/health")
