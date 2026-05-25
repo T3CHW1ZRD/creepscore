@@ -13,7 +13,7 @@ const MAP = {
   ea: ["EA", "ea.com"], ebay: ["eBay", "ebay.com"], figma: ["Figma", "figma.com"], github: ["GitHub", "github.com"],
   gitlab: ["GitLab", "gitlab.com"], google: ["Google", "google.com"], hubspot: ["HubSpot", "hubspot.com"],
   ibm: ["IBM", "ibm.com"], linkedin: ["LinkedIn", "linkedin.com"], lyft: ["Lyft", "lyft.com"],
-  microsoft: ["Microsoft", "microsoft.com"], mozilla: ["Firefox", "mozilla.org"], netflix: ["Netflix", "netflix.com"],
+  microsoft: ["Microsoft", "microsoft.com"], mozilla: ["Firefox", "firefox.com"], netflix: ["Netflix", "netflix.com"],
   nintendo: ["Nintendo", "nintendo.com"], nvidia: ["NVIDIA", "nvidia.com"], oracle: ["Oracle", "oracle.com"],
   paypal: ["PayPal", "paypal.com"], proton: ["Proton", "proton.me"], robinhood: ["Robinhood", "robinhood.com"],
   salesforce: ["Salesforce", "salesforce.com"], samsung: ["Samsung", "samsung.com"], shopify: ["Shopify", "shopify.com"],

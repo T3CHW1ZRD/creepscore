@@ -57,7 +57,7 @@
     "file": "mozilla_priv.txt",
     "label": "Firefox",
     "type": "privacy",
-    "domain": "mozilla.org"
+    "domain": "firefox.com"
   },
   {
     "file": "github_priv.txt",
