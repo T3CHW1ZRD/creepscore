@@ -89,18 +89,27 @@ export async function loadModel(onProgress) {
   return _extractor;
 }
 
-async function embed(texts) {
-  const out = await _extractor(texts, { pooling: "mean", normalize: true });
-  return out.tolist();
+// Embed in small chunks, yielding to the event loop between each so the page
+// repaints (live progress counter) instead of freezing on one giant blocking call.
+async function embed(texts, onTick) {
+  const CHUNK = 12;
+  const vecs = [];
+  for (let i = 0; i < texts.length; i += CHUNK) {
+    const out = await _extractor(texts.slice(i, i + CHUNK), { pooling: "mean", normalize: true });
+    vecs.push(...out.tolist());
+    if (onTick) onTick(Math.min(i + CHUNK, texts.length), texts.length);
+    await new Promise((r) => setTimeout(r, 0)); // let the UI repaint
+  }
+  return vecs;
 }
 
-/** Run the full semantic pass (browser only). `onProgress` receives model-load events. */
+/** Run the full semantic pass (browser only). `onProgress` receives load + embed events. */
 export async function deepAnalyze(text, documentType = "privacy", onProgress) {
   await loadModel(onProgress);
   const sentences = splitSentences(text);
   if (!sentences.length) return { findings: [], sentenceCount: 0 };
   const protos = PROTOTYPES[documentType] || PROTOTYPES.privacy;
-  const sentEmb = await embed(sentences);
   const protoEmb = await embed(protos.map((p) => p.text));
+  const sentEmb = await embed(sentences, (done, total) => onProgress && onProgress({ status: "embedding", done, total }));
   return { findings: matchPrototypes(sentEmb, sentences, protoEmb, protos), sentenceCount: sentences.length };
 }

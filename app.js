@@ -191,13 +191,19 @@ function render(r) {
 async function runDeep() {
   const btn = $("#deepBtn"), status = $("#deepStatus"), out = $("#deepOut");
   btn.disabled = true; btn.textContent = "Working…"; btn.style.opacity = ".6";
+  out.innerHTML = "";
   status.classList.remove("hidden");
-  status.textContent = "Loading model (~25 MB, one-time)…";
+  const setStatus = (msg, spin = true) => { status.innerHTML = `${spin ? '<span class="spinner"></span> ' : ""}${esc(msg)}`; };
+  setStatus("Loading model (~25 MB, one-time)…");
+  // Let the spinner paint before any heavy synchronous work begins.
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
   try {
     const { findings, sentenceCount } = await deepAnalyze(lastText, lastResult.documentType, (p) => {
-      if (p && p.status === "progress" && p.file) status.textContent = `Downloading model: ${p.file} … ${Math.round(p.progress || 0)}%`;
+      if (!p) return;
+      if (p.status === "progress" && p.file) setStatus(`Downloading model: ${p.file} … ${Math.round(p.progress || 0)}%`);
+      else if (p.status === "embedding") setStatus(`Analyzing locally… ${p.done}/${p.total} sentences`);
     });
-    status.textContent = `Scanned ${sentenceCount} sentences in your browser · ${findings.length} semantic match(es) (may overlap the rules).`;
+    status.innerHTML = `Scanned ${sentenceCount} sentences in your browser · ${findings.length} semantic match(es) (may overlap the rules).`;
     out.innerHTML = findings.length ? findings.map(flag).join("") : '<p class="text-sm muted">No additional clauses detected semantically.</p>';
     btn.textContent = "Re-run"; btn.disabled = false; btn.style.opacity = "1";
   } catch (e) {

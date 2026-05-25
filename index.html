@@ -48,6 +48,9 @@
   .flag-bad { background: var(--bad-bg); } .flag-bad .ttl { color: var(--bad-tx); }
   .flag-good { background: var(--good-bg); } .flag-good .ttl { color: var(--good-tx); }
   .ghost { border: 1px solid var(--border); color: var(--muted); } .ghost:hover { color: var(--text); border-color: var(--accent); }
+  /* transform-based so it keeps spinning even while the main thread is busy */
+  .spinner { width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; display: inline-block; vertical-align: -2px; animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   ::-webkit-scrollbar { height: 9px; width: 9px; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 9px; }
 </style>
 </head>
