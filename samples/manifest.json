@@ -1,29 +1,386 @@
 [
-  { "file": "signal.txt",        "label": "Signal",      "type": "privacy", "note": "Privacy-first messenger" },
-  { "file": "duckduckgo.txt",    "label": "DuckDuckGo",  "type": "privacy", "note": "\"We don't track you\"" },
-  { "file": "proton.txt",        "label": "Proton",      "type": "privacy", "note": "Encrypted email" },
-  { "file": "mozilla_priv.txt",  "label": "Firefox",     "type": "privacy", "note": "Mozilla / Firefox" },
-  { "file": "wikipedia_priv.txt","label": "Wikipedia",   "type": "privacy", "note": "Nonprofit" },
-  { "file": "apple.txt",         "label": "Apple",       "type": "privacy", "note": "Big tech, privacy-marketed" },
-  { "file": "github_priv.txt",   "label": "GitHub",      "type": "privacy", "note": "Developer platform" },
-  { "file": "microsoft_priv.txt","label": "Microsoft",   "type": "privacy", "note": "Big tech" },
-  { "file": "netflix_priv.txt",  "label": "Netflix",     "type": "privacy", "note": "Streaming" },
-  { "file": "spotify_priv.txt",  "label": "Spotify",     "type": "privacy", "note": "Streaming" },
-  { "file": "linkedin_priv.txt", "label": "LinkedIn",    "type": "privacy", "note": "Professional network" },
-  { "file": "paypal_priv.txt",   "label": "PayPal",      "type": "privacy", "note": "Payments" },
-  { "file": "discord_priv.txt",  "label": "Discord",     "type": "privacy", "note": "Chat platform" },
-  { "file": "whatsapp_priv.txt", "label": "WhatsApp",    "type": "privacy", "note": "Meta-owned messenger" },
-  { "file": "google.txt",        "label": "Google",      "type": "privacy", "note": "Ad-driven giant" },
-  { "file": "tiktok.txt",        "label": "TikTok",      "type": "privacy", "note": "Heavy data collection" },
-
-  { "file": "github_tos.txt",    "label": "GitHub",      "type": "tos", "note": "Developer-friendly terms" },
-  { "file": "google_tos.txt",    "label": "Google",      "type": "tos", "note": "Search/Android giant" },
-  { "file": "microsoft_tos.txt", "label": "Microsoft",   "type": "tos", "note": "Services agreement" },
-  { "file": "wordpress_tos.txt", "label": "WordPress",   "type": "tos", "note": "Automattic" },
-  { "file": "zoom_tos.txt",      "label": "Zoom",        "type": "tos", "note": "Video conferencing" },
-  { "file": "spotify_tos.txt",   "label": "Spotify",     "type": "tos", "note": "Arbitration + auto-renew" },
-  { "file": "discord_tos.txt",   "label": "Discord",     "type": "tos", "note": "Forced arbitration" },
-  { "file": "ea_tos.txt",        "label": "EA",          "type": "tos", "note": "Games publisher" },
-  { "file": "x_tos.txt",         "label": "X / Twitter", "type": "tos", "note": "Broad content license" },
-  { "file": "paypal_tos.txt",    "label": "PayPal",      "type": "tos", "note": "User agreement" }
+  {
+    "file": "apple.txt",
+    "label": "Apple",
+    "type": "privacy",
+    "domain": "apple.com"
+  },
+  {
+    "file": "atlassian_priv.txt",
+    "label": "Atlassian",
+    "type": "privacy",
+    "domain": "atlassian.com"
+  },
+  {
+    "file": "cloudflare_priv.txt",
+    "label": "Cloudflare",
+    "type": "privacy",
+    "domain": "cloudflare.com"
+  },
+  {
+    "file": "discord_priv.txt",
+    "label": "Discord",
+    "type": "privacy",
+    "domain": "discord.com"
+  },
+  {
+    "file": "dropbox_priv.txt",
+    "label": "Dropbox",
+    "type": "privacy",
+    "domain": "dropbox.com"
+  },
+  {
+    "file": "duckduckgo.txt",
+    "label": "DuckDuckGo",
+    "type": "privacy",
+    "domain": "duckduckgo.com"
+  },
+  {
+    "file": "ea_priv.txt",
+    "label": "EA",
+    "type": "privacy",
+    "domain": "ea.com"
+  },
+  {
+    "file": "ebay_priv.txt",
+    "label": "eBay",
+    "type": "privacy",
+    "domain": "ebay.com"
+  },
+  {
+    "file": "figma_priv.txt",
+    "label": "Figma",
+    "type": "privacy",
+    "domain": "figma.com"
+  },
+  {
+    "file": "mozilla_priv.txt",
+    "label": "Firefox",
+    "type": "privacy",
+    "domain": "mozilla.org"
+  },
+  {
+    "file": "github_priv.txt",
+    "label": "GitHub",
+    "type": "privacy",
+    "domain": "github.com"
+  },
+  {
+    "file": "gitlab_priv.txt",
+    "label": "GitLab",
+    "type": "privacy",
+    "domain": "gitlab.com"
+  },
+  {
+    "file": "google.txt",
+    "label": "Google",
+    "type": "privacy",
+    "domain": "google.com"
+  },
+  {
+    "file": "hubspot_priv.txt",
+    "label": "HubSpot",
+    "type": "privacy",
+    "domain": "hubspot.com"
+  },
+  {
+    "file": "ibm_priv.txt",
+    "label": "IBM",
+    "type": "privacy",
+    "domain": "ibm.com"
+  },
+  {
+    "file": "linkedin_priv.txt",
+    "label": "LinkedIn",
+    "type": "privacy",
+    "domain": "linkedin.com"
+  },
+  {
+    "file": "lyft_priv.txt",
+    "label": "Lyft",
+    "type": "privacy",
+    "domain": "lyft.com"
+  },
+  {
+    "file": "microsoft_priv.txt",
+    "label": "Microsoft",
+    "type": "privacy",
+    "domain": "microsoft.com"
+  },
+  {
+    "file": "netflix_priv.txt",
+    "label": "Netflix",
+    "type": "privacy",
+    "domain": "netflix.com"
+  },
+  {
+    "file": "nintendo_priv.txt",
+    "label": "Nintendo",
+    "type": "privacy",
+    "domain": "nintendo.com"
+  },
+  {
+    "file": "nvidia_priv.txt",
+    "label": "NVIDIA",
+    "type": "privacy",
+    "domain": "nvidia.com"
+  },
+  {
+    "file": "oracle_priv.txt",
+    "label": "Oracle",
+    "type": "privacy",
+    "domain": "oracle.com"
+  },
+  {
+    "file": "paypal_priv.txt",
+    "label": "PayPal",
+    "type": "privacy",
+    "domain": "paypal.com"
+  },
+  {
+    "file": "proton.txt",
+    "label": "Proton",
+    "type": "privacy",
+    "domain": "proton.me"
+  },
+  {
+    "file": "robinhood_priv.txt",
+    "label": "Robinhood",
+    "type": "privacy",
+    "domain": "robinhood.com"
+  },
+  {
+    "file": "salesforce_priv.txt",
+    "label": "Salesforce",
+    "type": "privacy",
+    "domain": "salesforce.com"
+  },
+  {
+    "file": "samsung_priv.txt",
+    "label": "Samsung",
+    "type": "privacy",
+    "domain": "samsung.com"
+  },
+  {
+    "file": "shopify_priv.txt",
+    "label": "Shopify",
+    "type": "privacy",
+    "domain": "shopify.com"
+  },
+  {
+    "file": "signal.txt",
+    "label": "Signal",
+    "type": "privacy",
+    "domain": "signal.org"
+  },
+  {
+    "file": "slack_priv.txt",
+    "label": "Slack",
+    "type": "privacy",
+    "domain": "slack.com"
+  },
+  {
+    "file": "spotify_priv.txt",
+    "label": "Spotify",
+    "type": "privacy",
+    "domain": "spotify.com"
+  },
+  {
+    "file": "stripe_priv.txt",
+    "label": "Stripe",
+    "type": "privacy",
+    "domain": "stripe.com"
+  },
+  {
+    "file": "telegram_priv.txt",
+    "label": "Telegram",
+    "type": "privacy",
+    "domain": "telegram.org"
+  },
+  {
+    "file": "tiktok.txt",
+    "label": "TikTok",
+    "type": "privacy",
+    "domain": "tiktok.com"
+  },
+  {
+    "file": "verizon_priv.txt",
+    "label": "Verizon",
+    "type": "privacy",
+    "domain": "verizon.com"
+  },
+  {
+    "file": "vimeo_priv.txt",
+    "label": "Vimeo",
+    "type": "privacy",
+    "domain": "vimeo.com"
+  },
+  {
+    "file": "whatsapp_priv.txt",
+    "label": "WhatsApp",
+    "type": "privacy",
+    "domain": "whatsapp.com"
+  },
+  {
+    "file": "wikipedia_priv.txt",
+    "label": "Wikipedia",
+    "type": "privacy",
+    "domain": "wikipedia.org"
+  },
+  {
+    "file": "yahoo_priv.txt",
+    "label": "Yahoo",
+    "type": "privacy",
+    "domain": "yahoo.com"
+  },
+  {
+    "file": "zendesk_priv.txt",
+    "label": "Zendesk",
+    "type": "privacy",
+    "domain": "zendesk.com"
+  },
+  {
+    "file": "apple_tos.txt",
+    "label": "Apple",
+    "type": "tos",
+    "domain": "apple.com"
+  },
+  {
+    "file": "cloudflare_tos.txt",
+    "label": "Cloudflare",
+    "type": "tos",
+    "domain": "cloudflare.com"
+  },
+  {
+    "file": "discord_tos.txt",
+    "label": "Discord",
+    "type": "tos",
+    "domain": "discord.com"
+  },
+  {
+    "file": "dropbox_tos.txt",
+    "label": "Dropbox",
+    "type": "tos",
+    "domain": "dropbox.com"
+  },
+  {
+    "file": "ea_tos.txt",
+    "label": "EA",
+    "type": "tos",
+    "domain": "ea.com"
+  },
+  {
+    "file": "ebay_tos.txt",
+    "label": "eBay",
+    "type": "tos",
+    "domain": "ebay.com"
+  },
+  {
+    "file": "figma_tos.txt",
+    "label": "Figma",
+    "type": "tos",
+    "domain": "figma.com"
+  },
+  {
+    "file": "github_tos.txt",
+    "label": "GitHub",
+    "type": "tos",
+    "domain": "github.com"
+  },
+  {
+    "file": "google_tos.txt",
+    "label": "Google",
+    "type": "tos",
+    "domain": "google.com"
+  },
+  {
+    "file": "microsoft_tos.txt",
+    "label": "Microsoft",
+    "type": "tos",
+    "domain": "microsoft.com"
+  },
+  {
+    "file": "paypal_tos.txt",
+    "label": "PayPal",
+    "type": "tos",
+    "domain": "paypal.com"
+  },
+  {
+    "file": "salesforce_tos.txt",
+    "label": "Salesforce",
+    "type": "tos",
+    "domain": "salesforce.com"
+  },
+  {
+    "file": "snapchat_tos.txt",
+    "label": "Snapchat",
+    "type": "tos",
+    "domain": "snap.com"
+  },
+  {
+    "file": "sony_tos.txt",
+    "label": "Sony / PSN",
+    "type": "tos",
+    "domain": "sony.com"
+  },
+  {
+    "file": "spotify_tos.txt",
+    "label": "Spotify",
+    "type": "tos",
+    "domain": "spotify.com"
+  },
+  {
+    "file": "stripe_tos.txt",
+    "label": "Stripe",
+    "type": "tos",
+    "domain": "stripe.com"
+  },
+  {
+    "file": "tiktok_tos.txt",
+    "label": "TikTok",
+    "type": "tos",
+    "domain": "tiktok.com"
+  },
+  {
+    "file": "tumblr_tos.txt",
+    "label": "Tumblr",
+    "type": "tos",
+    "domain": "tumblr.com"
+  },
+  {
+    "file": "vimeo_tos.txt",
+    "label": "Vimeo",
+    "type": "tos",
+    "domain": "vimeo.com"
+  },
+  {
+    "file": "wise_tos.txt",
+    "label": "Wise",
+    "type": "tos",
+    "domain": "wise.com"
+  },
+  {
+    "file": "wordpress_tos.txt",
+    "label": "WordPress",
+    "type": "tos",
+    "domain": "wordpress.com"
+  },
+  {
+    "file": "x_tos.txt",
+    "label": "X / Twitter",
+    "type": "tos",
+    "domain": "x.com"
+  },
+  {
+    "file": "yahoo_tos.txt",
+    "label": "Yahoo",
+    "type": "tos",
+    "domain": "yahoo.com"
+  },
+  {
+    "file": "zoom_tos.txt",
+    "label": "Zoom",
+    "type": "tos",
+    "domain": "zoom.us"
+  }
 ]
