@@ -56,7 +56,7 @@
 </head>
 <body>
   <header class="sticky top-0 z-20 border-b bdr" style="background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px);">
-    <div class="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
+    <div class="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
       <button id="home" class="flex items-center gap-2">
         <img src="logo.png" alt="CreepScore" class="h-8 w-8 rounded-lg object-cover" />
         <span class="display font-semibold text-lg">CreepScore</span>
@@ -68,17 +68,18 @@
     </div>
   </header>
 
-  <main class="max-w-4xl mx-auto px-5 pb-20">
+  <main class="max-w-6xl mx-auto px-5 pb-20">
 
     <!-- ░░ PICK VIEW ░░ -->
     <section id="pickView" class="pt-12">
-      <div class="text-center mb-7">
-        <img src="logo.png" alt="CreepScore" class="mx-auto w-36 sm:w-44 rounded-2xl shadow-lg mb-5" />
-        <h1 class="display text-4xl sm:text-5xl font-bold leading-[1.05]">Is it creepy?</h1>
-        <p class="muted mt-3">Grade any company's <b style="color:var(--text)">privacy policy</b> or <b style="color:var(--text)">terms of service</b> — instantly, in your browser.</p>
+      <div class="max-w-2xl mx-auto">
+        <div class="text-center mb-7">
+          <img src="logo.png" alt="CreepScore" class="mx-auto w-36 sm:w-44 rounded-2xl shadow-lg mb-5" />
+          <h1 class="display text-4xl sm:text-5xl font-bold leading-[1.05]">Is it creepy?</h1>
+          <p class="muted mt-3">Grade any company's <b style="color:var(--text)">privacy policy</b> or <b style="color:var(--text)">terms of service</b> — instantly, in your browser.</p>
+        </div>
+        <input id="search" placeholder="Search 64 companies…" class="field w-full rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500/30 mb-6" />
       </div>
-
-      <input id="search" placeholder="Search 64 companies…" class="field w-full rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-indigo-500/30 mb-4" />
 
       <div class="flex items-center justify-between gap-3 flex-wrap mb-4">
         <div class="flex gap-1 text-sm font-medium">
@@ -88,8 +89,8 @@
         <button id="openPaste" class="text-sm ghost rounded-lg px-3 py-1.5">Paste your own ↗</button>
       </div>
 
-      <div id="gridPrivacy" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5"></div>
-      <div id="gridTos" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 hidden"></div>
+      <div id="gridPrivacy" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5"></div>
+      <div id="gridTos" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5 hidden"></div>
 
       <div class="mt-8 pt-6 border-t bdr text-center">
         <p class="text-sm muted mb-2">Don't see a company you want graded?</p>
@@ -102,7 +103,7 @@
     </section>
 
     <!-- ░░ PASTE VIEW ░░ -->
-    <section id="pasteView" class="pt-8 hidden">
+    <section id="pasteView" class="pt-8 hidden max-w-3xl mx-auto">
       <button id="backFromPaste" class="text-sm ghost rounded-lg px-3 py-1.5 mb-5">← Companies</button>
       <h2 class="display text-2xl font-bold mb-1">Paste a document</h2>
       <p class="muted text-sm mb-4">Drop in any privacy policy or terms of service. It's analyzed locally — nothing is uploaded.</p>

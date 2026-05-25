@@ -162,12 +162,12 @@ function render(r) {
         <span class="muted">${r.stats.redFlags} red flag(s), ${r.stats.greenFlags} good sign(s) · ${r.stats.readingMinutes} min read · ${r.stats.words.toLocaleString()} words.</span></p>
     </div>
 
-    <div class="fade grid md:grid-cols-2 gap-4 mt-4">
-      <div class="card p-5 sm:p-6"><h3 class="display font-semibold mb-4">Category breakdown</h3>${dims}</div>
-      <div class="card p-5 sm:p-6">
+    <div class="fade grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 items-start">
+      <div class="card p-5 sm:p-6 lg:col-span-1"><h3 class="display font-semibold mb-4">Category breakdown</h3>${dims}</div>
+      <div class="card p-5 sm:p-6 md:col-span-1 lg:col-span-2">
         <h3 class="display font-semibold">What it actually says</h3>
         <p class="text-xs muted mb-3 mt-0.5">Click a clause to read the exact wording.</p>
-        <div class="space-y-2">
+        <div class="space-y-2 sm:grid sm:grid-cols-2 sm:gap-2 sm:space-y-0">
           ${bad.length ? bad.map(flag).join("") : '<p class="text-sm muted">No major red flags found.</p>'}
           ${good.map(flag).join("")}
         </div>
@@ -181,7 +181,7 @@ function render(r) {
         <button id="deepBtn" class="px-4 py-2 rounded-lg text-sm font-semibold shrink-0 border" style="border-color:var(--accent);color:var(--accent)">Run deep analysis</button>
       </div>
       <div id="deepStatus" class="text-xs muted mt-3 hidden"></div>
-      <div id="deepOut" class="mt-3 grid sm:grid-cols-2 gap-2"></div>
+      <div id="deepOut" class="mt-3 grid sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
     </div>`;
 
   $("#deepBtn").onclick = runDeep;
